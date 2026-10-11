@@ -1,10 +1,6 @@
 import tkinter as tk
 from tkinter import ttk
-
-from config import APP_VERSION
-
-FONT_UI = "Segoe UI"
-FONT_UI_SYMBOL = "Segoe UI Symbol"
+from config import APP_VERSION, FONT_UI, FONT_UI_SYMBOL
 
 BG = "#f4f7fb"
 CARD = "#ffffff"

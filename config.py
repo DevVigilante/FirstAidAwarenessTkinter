@@ -4,6 +4,9 @@ WINDOW_SIZE = "1100x720"
 MIN_WIDTH = 900
 MIN_HEIGHT = 620
 
+FONT_UI = "Segoe UI"
+FONT_UI_SYMBOL = "Segoe UI Symbol"
+
 # India: 112 is the Government of India's unified emergency number.
 EMERGENCY_NUMBER = "112"
 AMBULANCE_NOTE = (
