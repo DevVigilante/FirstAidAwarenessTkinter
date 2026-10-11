@@ -3,6 +3,9 @@ from tkinter import ttk
 
 from config import APP_VERSION
 
+FONT_UI = "Segoe UI"
+FONT_UI_SYMBOL = "Segoe UI Symbol"
+
 BG = "#f4f7fb"
 CARD = "#ffffff"
 TEXT = "#172033"
@@ -23,22 +26,22 @@ def setup_style(root):
 
     style.configure("TFrame", background=BG)
     style.configure("Card.TFrame", background=CARD)
-    style.configure("TLabel", background=BG, foreground=TEXT, font=("Segoe UI", 10))
+    style.configure("TLabel", background=BG, foreground=TEXT, font=(FONT_UI, 10))
     style.configure("Title.TLabel", background=BG, foreground=TEXT,
-                    font=("Segoe UI", 22, "bold"))
+                    font=(FONT_UI, 22, "bold"))
     style.configure("Subtitle.TLabel", background=BG, foreground=MUTED,
-                    font=("Segoe UI", 11))
+                    font=(FONT_UI, 11))
     style.configure("Section.TLabel", background=BG, foreground=TEXT,
-                    font=("Segoe UI", 15, "bold"))
+                    font=(FONT_UI, 15, "bold"))
     style.configure("CardTitle.TLabel", background=CARD, foreground=TEXT,
-                    font=("Segoe UI", 12, "bold"))
+                    font=(FONT_UI, 12, "bold"))
     style.configure("CardText.TLabel", background=CARD, foreground=MUTED,
-                    font=("Segoe UI", 9))
+                    font=(FONT_UI, 9))
     style.configure("Body.TLabel", background=BG, foreground=TEXT,
-                    font=("Segoe UI", 10))
+                    font=(FONT_UI, 10))
     style.configure("Muted.TLabel", background=BG, foreground=MUTED,
-                    font=("Segoe UI", 9))
-    style.configure("TButton", font=("Segoe UI", 10, "bold"), padding=(12, 8))
+                    font=(FONT_UI, 9))
+    style.configure("TButton", font=(FONT_UI, 10, "bold"), padding=(12, 8))
     style.configure("Primary.TButton", background=PRIMARY, foreground="white",
                     padding=(14, 9))
     style.map("Primary.TButton",
@@ -51,7 +54,7 @@ def setup_style(root):
               foreground=[("active", "white")])
     style.configure("TEntry", padding=8)
     style.configure("TRadiobutton", background=BG, foreground=TEXT,
-                    font=("Segoe UI", 10))
+                    font=(FONT_UI, 10))
     style.configure("TCheckbutton", background=BG, foreground=TEXT)
 
 def add_header(parent, title, subtitle=None, icon="✚"):
@@ -83,11 +86,11 @@ def card(parent, title, description, icon="•", command=None):
     inner.pack(fill="both", expand=True, padx=16, pady=15)
 
     tk.Label(inner, text=icon, bg=CARD, fg=PRIMARY,
-             font=("Segoe UI Symbol", 22, "bold")).pack(anchor="w")
+             font=(FONT_UI_SYMBOL, 22, "bold")).pack(anchor="w")
     tk.Label(inner, text=title, bg=CARD, fg=TEXT,
-             font=("Segoe UI", 12, "bold")).pack(anchor="w", pady=(5, 3))
+             font=(FONT_UI, 12, "bold")).pack(anchor="w", pady=(5, 3))
     tk.Label(inner, text=description, bg=CARD, fg=MUTED,
-             font=("Segoe UI", 9), wraplength=250, justify="left").pack(anchor="w")
+             font=(FONT_UI, 9), wraplength=250, justify="left").pack(anchor="w")
 
     if command:
         btn = ttk.Button(inner, text="Open →", command=command)
