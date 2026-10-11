@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 
-from config import APP_VERSION, FONT_UI, FONT_UI_SYMBOL, BG, CARD, TEXT, MUTED, PRIMARY, PRIMARY_DARK, BORDER, SUCCESS, WARNING, DANGER
+from config import APP_VERSION, FONT_UI, FONT_UI_SYMBOL, BG, CARD, TEXT, MUTED, PRIMARY, PRIMARY_DARK, BORDER, DANGER
 
 def setup_style(root):
     style = ttk.Style(root)
