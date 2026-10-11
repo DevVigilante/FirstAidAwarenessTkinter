@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
 from gui.common import add_header, add_action_bar, ScrollableFrame, CARD, BORDER
-from config import DISCLAIMER
+from config import DISCLAIMER, FONT_UI
 
 class AboutPage(ttk.Frame):
     def __init__(self, app):
@@ -32,9 +32,9 @@ class AboutPage(ttk.Frame):
             inner = tk.Frame(box, bg=CARD)
             inner.pack(fill="both", padx=20, pady=16)
             tk.Label(inner, text=heading, bg=CARD, fg="#1748c7",
-                     font=("Segoe UI", 11, "bold")).pack(anchor="w")
+                     font=(FONT_UI, 11, "bold")).pack(anchor="w")
             tk.Label(inner, text=body, bg=CARD, fg="#42526a",
-                     font=("Segoe UI", 10), wraplength=850,
+                     font=(FONT_UI, 10), wraplength=850,
                      justify="left").pack(anchor="w", pady=(5, 0))
 
         add_action_bar(self, lambda: self.app.show("home"))
