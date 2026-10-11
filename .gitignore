@@ -1,0 +1,5 @@
+__pycache__/
+*.pyc
+
+# For JEtbrains IDE
+.idea
