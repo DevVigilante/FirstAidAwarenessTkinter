@@ -1,6 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from config import APP_TITLE, APP_VERSION, EMERGENCY_NUMBER
+
+from config import APP_VERSION
 
 BG = "#f4f7fb"
 CARD = "#ffffff"
