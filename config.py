@@ -7,6 +7,17 @@ MIN_HEIGHT = 620
 FONT_UI = "Segoe UI"
 FONT_UI_SYMBOL = "Segoe UI Symbol"
 
+BG = "#f4f7fb"
+CARD = "#ffffff"
+TEXT = "#172033"
+MUTED = "#5f6b7a"
+PRIMARY = "#1f5eff"
+PRIMARY_DARK = "#1748c7"
+BORDER = "#dbe2ea"
+SUCCESS = "#198754"
+WARNING = "#9a6700"
+DANGER = "#c62828"
+
 # India: 112 is the Government of India's unified emergency number.
 EMERGENCY_NUMBER = "112"
 AMBULANCE_NOTE = (
