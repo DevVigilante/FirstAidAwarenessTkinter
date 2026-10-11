@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-
 from config import APP_VERSION, FONT_UI, FONT_UI_SYMBOL, BG, CARD, TEXT, MUTED, PRIMARY, PRIMARY_DARK, BORDER, DANGER
+import sys
 
 def setup_style(root):
     style = ttk.Style(root)
@@ -43,6 +43,7 @@ def setup_style(root):
                     font=(FONT_UI, 10))
     style.configure("TCheckbutton", background=BG, foreground=TEXT)
 
+
 def add_header(parent, title, subtitle=None, icon="✚"):
     frame = ttk.Frame(parent)
     frame.pack(fill="x", padx=28, pady=(22, 8))
@@ -55,6 +56,7 @@ def add_header(parent, title, subtitle=None, icon="✚"):
                   wraplength=900, justify="left").pack(fill="x", pady=(5, 0))
     return frame
 
+
 def add_action_bar(parent, back_command=None, primary_text=None, primary_command=None):
     bar = ttk.Frame(parent)
     bar.pack(fill="x", padx=28, pady=(10, 20))
@@ -64,6 +66,7 @@ def add_action_bar(parent, back_command=None, primary_text=None, primary_command
         ttk.Button(bar, text=primary_text, command=primary_command,
                    style="Primary.TButton").pack(side="right")
     return bar
+
 
 def card(parent, title, description, icon="•", command=None):
     outer = tk.Frame(parent, bg=CARD, highlightbackground=BORDER,
@@ -83,52 +86,167 @@ def card(parent, title, description, icon="•", command=None):
         btn.pack(anchor="w", pady=(12, 0))
     return outer
 
+
 class ScrollableFrame(ttk.Frame):
-    """Reusable vertical scrolling container for long pages."""
     def __init__(self, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
-        self.canvas = tk.Canvas(self, background=BG, highlightthickness=0, bd=0)
-        self.scrollbar = ttk.Scrollbar(self, orient="vertical",
-                                       command=self.canvas.yview)
-        self.inner = ttk.Frame(self.canvas)
-        self.window_id = self.canvas.create_window(
-            (0, 0), window=self.inner, anchor="nw"
+
+        self.canvas = tk.Canvas(
+            self,
+            highlightthickness=0,
+            borderwidth=0
         )
-        self.canvas.configure(yscrollcommand=self.scrollbar.set)
 
-        self.canvas.pack(side="left", fill="both", expand=True)
-        self.scrollbar.pack(side="right", fill="y")
+        self.scrollbar = ttk.Scrollbar(
+            self,
+            orient="vertical",
+            command=self.canvas.yview
+        )
 
-        self.inner.bind("<Configure>", self._on_inner_configure)
-        self.canvas.bind("<Configure>", self._on_canvas_configure)
-        self.canvas.bind("<Enter>", self._bind_mousewheel)
-        self.canvas.bind("<Leave>", self._unbind_mousewheel)
-        self.inner.bind("<Enter>", self._bind_mousewheel)
-        self.inner.bind("<Leave>", self._unbind_mousewheel)
+        self.inner = ttk.Frame(self.canvas)
 
-    def _on_inner_configure(self, _event=None):
-        self.canvas.configure(scrollregion=self.canvas.bbox("all"))
+        self._window_id = self.canvas.create_window(
+            (0, 0),
+            window=self.inner,
+            anchor="nw"
+        )
 
-    def _on_canvas_configure(self, event):
-        self.canvas.itemconfigure(self.window_id, width=event.width)
+        self.canvas.configure(
+            yscrollcommand=self.scrollbar.set
+        )
 
-    def _bind_mousewheel(self, _event=None):
-        self.canvas.bind_all("<MouseWheel>", self._on_mousewheel)
-        self.canvas.bind_all("<Button-4>", self._on_mousewheel)
-        self.canvas.bind_all("<Button-5>", self._on_mousewheel)
+        self.canvas.pack(
+            side="left",
+            fill="both",
+            expand=True
+        )
 
-    def _unbind_mousewheel(self, _event=None):
-        self.canvas.unbind_all("<MouseWheel>")
-        self.canvas.unbind_all("<Button-4>")
-        self.canvas.unbind_all("<Button-5>")
+        self.scrollbar.pack(
+            side="right",
+            fill="y"
+        )
+
+        # Scroll state
+        self._scroll_remainder = 0.0
+        self._scrolling_active = False
+
+        # Update the scrollable area when content changes.
+        self.inner.bind(
+            "<Configure>",
+            self._update_scroll_region
+        )
+
+        # Keep the content width equal to the canvas width.
+        self.canvas.bind(
+            "<Configure>",
+            self._update_content_width
+        )
+
+        # Activate scrolling when the pointer enters the canvas.
+        self.canvas.bind(
+            "<Enter>",
+            self._activate_scrolling
+        )
+
+        self.canvas.bind(
+            "<Leave>",
+            self._deactivate_scrolling
+        )
+
+    def _update_scroll_region(self, event=None):
+        self.canvas.configure(
+            scrollregion=self.canvas.bbox("all")
+        )
+
+    def _update_content_width(self, event):
+        self.canvas.itemconfigure(
+            self._window_id,
+            width=event.width
+        )
+
+    def _activate_scrolling(self, event=None):
+        if self._scrolling_active:
+            return
+
+        self._scrolling_active = True
+
+        # Windows, macOS and supported Linux touchpad events.
+        self.bind_all(
+            "<MouseWheel>",
+            self._on_mousewheel,
+            add="+"
+        )
+
+        # Linux mouse-wheel events.
+        self.bind_all(
+            "<Button-4>",
+            self._on_linux_scroll,
+            add="+"
+        )
+
+        self.bind_all(
+            "<Button-5>",
+            self._on_linux_scroll,
+            add="+"
+        )
+
+    def _deactivate_scrolling(self, event=None):
+        if not self._scrolling_active:
+            return
+
+        self._scrolling_active = False
+
+        # Remove the global bindings.
+        self.unbind_all("<MouseWheel>")
+        self.unbind_all("<Button-4>")
+        self.unbind_all("<Button-5>")
+
+        # Prevent residual movement from affecting the next gesture.
+        self._scroll_remainder = 0.0
 
     def _on_mousewheel(self, event):
-        if getattr(event, "num", None) == 4:
-            self.canvas.yview_scroll(-1, "units")
-        elif getattr(event, "num", None) == 5:
-            self.canvas.yview_scroll(1, "units")
-        else:
-            self.canvas.yview_scroll(int(-1 * (event.delta / 120)), "units")
+        if not self.winfo_exists():
+            return
 
-    def scroll_to_top(self):
-        self.canvas.yview_moveto(0)
+        if sys.platform == "darwin":
+            # macOS trackpad deltas.
+            delta = -event.delta
+
+        elif sys.platform.startswith("win"):
+            # Windows wheel events normally use multiples of 120.
+            delta = -event.delta / 120.0
+
+        else:
+            # Linux touchpad events, when exposed through MouseWheel.
+            delta = -event.delta
+
+        # Accumulate fractional movement.
+        self._scroll_remainder += delta
+
+        # Scroll only when a complete unit is accumulated.
+        movement = int(self._scroll_remainder)
+
+        if movement:
+            self._scroll_remainder -= movement
+
+            self.canvas.yview_scroll(
+                movement,
+                "units"
+            )
+
+    def _on_linux_scroll(self, event):
+        if not self.winfo_exists():
+            return
+
+        # Reset fractional movement when a discrete wheel event arrives.
+        self._scroll_remainder = 0.0
+
+        if event.num == 4:
+            self.canvas.yview_scroll(-1, "units")
+
+        elif event.num == 5:
+            self.canvas.yview_scroll(1, "units")
+
+    def destroy(self):
+        self._deactivate_scrolling()
+        super().destroy()
