@@ -1,7 +1,7 @@
 import tkinter as tk
 from tkinter import ttk
-from gui.common import add_header, add_action_bar, ScrollableFrame, CARD, BORDER
-from config import DISCLAIMER, FONT_UI
+from gui.common import add_header, add_action_bar, ScrollableFrame
+from config import (DISCLAIMER, FONT_UI, CARD, BORDER)
 
 class AboutPage(ttk.Frame):
     def __init__(self, app):
