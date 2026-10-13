@@ -94,7 +94,8 @@ class ScrollableFrame(ttk.Frame):
         self.canvas = tk.Canvas(
             self,
             highlightthickness=0,
-            borderwidth=0
+            borderwidth=0,
+            background=BG
         )
 
         self.scrollbar = ttk.Scrollbar(
